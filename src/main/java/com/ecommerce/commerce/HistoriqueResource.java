@@ -37,15 +37,20 @@ public class HistoriqueResource {
     public ResponseEntity<Historique> addAchat(@RequestBody Historique historique) {
         Stocke produit1= historique.getProduit();
         Stocke produit = produitService.findProduitbyId(produit1.getId());
-        historique.setUnitaire(produit.getPrix());
-        historique.setPrix_total(historique.getUnitaire() * historique.getQuantite());
-        historique.setProduit(produit);
         Integer stock = produit.getQuantite();
         Float beni = produit.getGain();
-        produit.setGain(beni + historique.getPrix_total());
-        produit.setQuantite(stock - historique.getQuantite());
-        Historique newAchat = historiqueService.addHistorique(historique);
-        return new ResponseEntity<>(newAchat, HttpStatus.CREATED);
+        if (stock >= historique.getQuantite() && historique.getQuantite() > 0) {
+            historique.setUnitaire(produit.getPrix());
+            historique.setPrix_total(historique.getUnitaire() * historique.getQuantite());
+            historique.setProduit(produit);
+            produit.setGain(beni + historique.getPrix_total());
+            produit.setQuantite(stock - historique.getQuantite());
+            Historique newAchat = historiqueService.addHistorique(historique);
+            return new ResponseEntity<>(newAchat, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @DeleteMapping("/delete/{id}")

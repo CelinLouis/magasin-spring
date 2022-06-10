@@ -41,7 +41,7 @@ public class HistoriqueService{
     }
 
     public void deleteAll() {
-        produitRepo.deleteAll();
+        historiqueRepo.deleteAll();
     }
 
 }

@@ -15,6 +15,7 @@ public class Stocke implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
     private Long id;
+    @Column(nullable = false)
     private String nom;
     private Float prix, gain;
     private Integer quantite;

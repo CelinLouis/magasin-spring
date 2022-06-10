@@ -48,14 +48,27 @@ public class ProduitResource {
 
     @PutMapping("/update")
     public ResponseEntity<Stocke> updateProduit(@RequestBody Stocke produit) {
+        Stocke produitId = produitService.findProduitbyId(produit.getId());
+        String nom = produit.getNom();
+        if (nom == ""){
+         produit.setNom(produitId.getNom());
+        }
         Stocke updateProduit = produitService.updateProduit(produit);
         return new ResponseEntity<>(updateProduit, HttpStatus.OK);
     }
 
     @PutMapping("/approvisionner")
     public ResponseEntity<Stocke> approvisionnerProduit(@RequestBody Stocke produit) {
-        Stocke updateProduit = produitService.approvisionnerProduit(produit);
-        return new ResponseEntity<>(updateProduit, HttpStatus.OK);
+        Stocke produitId = produitService.findProduitbyId(produit.getId());
+        Integer oldQt = produitId.getQuantite();
+        Integer newQt = produit.getQuantite();
+        if ( newQt > 0) {
+            produit.setQuantite(newQt + oldQt);
+            Stocke updateProduit = produitService.approvisionnerProduit(produit);
+            return ResponseEntity.ok().body(updateProduit);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/delete")
