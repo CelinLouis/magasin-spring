@@ -53,6 +53,7 @@ public class ProduitService {
                 .orElseThrow(() -> new UserNotFoundException("Je n'est pas trouver id" + id + " dans la base"));
     }
 
+
     public void deleteProduit(Long id) {
         produitRepo.deleteProduitById(id);
         produitRepo.deleteParent(id);
@@ -61,5 +62,6 @@ public class ProduitService {
     public void deleteAll() {
         produitRepo.deleteAll();
     }
+
 
 }

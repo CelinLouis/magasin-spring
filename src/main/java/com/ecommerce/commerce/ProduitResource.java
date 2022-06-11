@@ -35,8 +35,15 @@ public class ProduitResource {
 
     @PostMapping("/add")
     public ResponseEntity<Stocke> addProduit(@RequestBody Stocke produit) {
-        Stocke newProduit = produitService.addProduit(produit);
-        return new ResponseEntity<>(newProduit, HttpStatus.CREATED);
+        if (produit.getNom() == ""){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (produit.getPrix() >= 0 && produit.getQuantite() >= 0){
+            Stocke newProduit = produitService.addProduit(produit);
+            return new ResponseEntity<>(newProduit, HttpStatus.CREATED);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/delete/{id}")
@@ -53,8 +60,12 @@ public class ProduitResource {
         if (nom == ""){
          produit.setNom(produitId.getNom());
         }
-        Stocke updateProduit = produitService.updateProduit(produit);
-        return new ResponseEntity<>(updateProduit, HttpStatus.OK);
+        if (produit.getPrix() >= 0){
+            Stocke updateProduit = produitService.updateProduit(produit);
+            return new ResponseEntity<>(updateProduit, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/approvisionner")
